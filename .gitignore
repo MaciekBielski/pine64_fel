@@ -1,0 +1,7 @@
+*.o
+*.elf
+*.bin
+*.pdf
+*.png
+*.img.xz
+qemu/*
