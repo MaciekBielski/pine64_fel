@@ -23,6 +23,7 @@ im_flash:
 #######################################################################
 
 test_dir	=	test_kernel
+kern_im		=	$(test_dir)/hello.bin
 
 build_objects:
 	$(MAKE) -C $(test_dir) build_test
@@ -200,12 +201,11 @@ pack_clean:
 
 im_out		=	szyszka.img
 im_part		=	szyszka.disk
-kern_im		=	# this is what I need to build
 boot0_pos	=	8		#KB
 uboot_pos	=	19096	#KB
 part_pos	=	20		#MB
 part_pos_kb	=	20480	# same in KB
-boot_sz		=	30		#MB, I assume not more will be needed
+boot_sz		=	10		#MB, I assume not more will be needed
 
 image_boot:
 	dd if=/dev/zero bs=1M count=$(part_pos) of=$(im_out)
@@ -213,38 +213,36 @@ image_boot:
 	dd if=$(uboot_dtb) conv=notrunc bs=1K seek=$(uboot_pos) of=$(im_out)
 
 define PARTTAB
-cat <<@
+cat <<@ | sudo fdisk $(im_out)
 o
 n
 p
 1
-$$(($(part_pos_kb)*2))
-+$(boot_sz)M
-t
-c
-n
-p
-2
-$$(($(part_pos_kb)*2 + $(boot_sz)*1024*2))
+$$(($(part_pos_kb)))
 
 t
-2
-83
+b
+p
 w
 @
 endef
 export PARTTAB
 
-# In case of linux image:
-#	mcopy -sm -i ${out}1 ${kernel}/pine64 ::
-#	mcopy -m -i ${out}1 ${kernel}/initrd.img :: || true
-#	mcopy -m -i ${out}1 ${kernel}/uEnv.txt :: || true
-#
+# TODO: Try again, wrong filesystem type
+
 image_kernel:
 	dd if=/dev/zero bs=1M count=$(boot_sz) of=$(im_part)
 	sudo mkfs.vfat -n BOOT $(im_part) && \
-	mcopy -sm -i $(im_part) $(kern_im) && \
+	mcopy -smnv $(kern_im) $(im_part)
 	dd if=$(im_part) conv=notrunc oflag=append bs=1M seek=$(part_pos) of=$(im_out) && \
-	rm -f $(im_part) && \
-	echo "$$PARTTAB" | fdisk $(im_out)
+	rm -f $(im_part)
+	sh -c "$$PARTTAB"
+
+# pre-build kernel was flashed with im_flash
+
+image_flash:
+	sudo dd if=$(im_out) bs=1M oflag=sync of=$(sd_path)
+
+test:
+	echo "$$PARTTAB"
 
