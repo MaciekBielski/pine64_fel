@@ -201,9 +201,12 @@ pack_clean:
 
 im_out		=	szyszka.img
 im_part		=	szyszka.disk
-boot0_pos	=	8		#KB
-uboot_pos	=	19096	#KB
-part_pos	=	20		#MB
+im_part		=	szyszka.disk
+u_env		=	uEnv.txt
+boot0_pos	=	8		#KB  = 
+# this hole seems to be fixed by boot0
+uboot_pos	=	19096	#KB  = 
+part_pos	=	20		#MB  = [0x1400000
 part_pos_kb	=	20480	# same in KB
 boot_sz		=	10		#MB, I assume not more will be needed
 
@@ -218,31 +221,57 @@ o
 n
 p
 1
-$$(($(part_pos_kb)))
+$$(($(part_pos_kb)*2))
 
 t
-b
+83
 p
 w
 @
 endef
 export PARTTAB
 
-# TODO: Try again, wrong filesystem type
-
 image_kernel:
 	dd if=/dev/zero bs=1M count=$(boot_sz) of=$(im_part)
 	sudo mkfs.vfat -n BOOT $(im_part) && \
-	mcopy -smnv $(kern_im) $(im_part)
+	mcopy -smnv -i $(im_part)  $(kern_im) :: && \
+	mcopy -smnv -i $(im_part) $(u_env) ::
 	dd if=$(im_part) conv=notrunc oflag=append bs=1M seek=$(part_pos) of=$(im_out) && \
 	rm -f $(im_part)
 	sh -c "$$PARTTAB"
 
+# HOW To run my binary form uboot??
+#
+# [0x2000,0xa000)			: boot0
+# ...
+# [0x12a6000, 138e000)		: u-boot
+# ------ BOOT vfat ------
+# [0x1400000, 0x14000c0)	: mkfs.fat FAT16
+# [0x1405200, 1405280)		: BOOT
+# [0x1409200, 14092b0)		: kernel.bin
+# [0x1409a00, 1409a60)		: uEnv.txt
+#
 # pre-build kernel was flashed with im_flash
+#
+# application error:
+# sunxi#go 0x41000000
+# ## Starting application at 0x41000000 ...
+# data abort
+# pc : [<41000028>]          lr : [<7ff1d054>]
+# sp : 76eb8e00  ip : 00000030     fp : 7ff1d00c
+# r10: 00000002  r9 : 76ed0ea0     r8 : 7ffb5340
+# r7 : 77f1b0b8  r6 : 41000000     r5 : 00000002  r4 : 77f1b0bc
+# r3 : 41000000  r2 : 77f1b0bc     r1 : 77f1b0bc  r0 : 00000001
+# Flags: nZCv  IRQs on  FIQs off  Mode SVC_32
+# Resetting CPU ...
+#
 
 image_flash:
 	sudo dd if=$(im_out) bs=1M oflag=sync of=$(sd_path)
 
-test:
-	echo "$$PARTTAB"
+# xcc64
+image_test:
+	$(xcc64)objdump -fF $(im_out)
+
+	
 

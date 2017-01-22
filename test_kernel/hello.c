@@ -1,13 +1,18 @@
 
-volatile unsigned int * const UART0DR = (unsigned int *)0x01C28000;
+volatile unsigned int * const UART0_DR = (unsigned int *)0x01C28000;
+volatile unsigned int * const UART_LSR = (unsigned int *)0x01C28014;
  
-void print_uart0(const char *s)
+void print_uart0(const char c)
 {
-    for(; *s!='\0'; s++)
-        *UART0DR = (unsigned int)(*s); /* Transmit char */
+	while(!((*UART_LSR) & 0x20))
+		continue;
+	*UART0_DR = c;
 }
  
 void kentry()
 {
-    print_uart0("Hello world!\n");
+	print_uart0('D');
+	print_uart0('U');
+	print_uart0('P');
+	print_uart0('A');
 }
