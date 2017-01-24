@@ -19,7 +19,6 @@ im_flash:
 
 #######################################################################
 # 3. Building test kernel
-# TODO: merge this kernel with loadable image that is written to SDcard
 #######################################################################
 
 test_dir	=	test_kernel
@@ -273,5 +272,12 @@ image_flash:
 image_test:
 	$(xcc64)objdump -fF $(im_out)
 
+#Environment size: 1619/131067 bytes
+#	sunxi#set load_kernel 'fatload mmc ${boot_part} ${load_addr} ${kernel_filename}'
+#	sunxi#set kernel_filename 'hello.bin'
+#	sunxi#
+#	sunxi#
+#	sunxi#set mmcboot 'run load_kernel go ${load_addr}'
+#	s
 	
 

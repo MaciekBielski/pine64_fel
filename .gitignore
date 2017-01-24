@@ -4,4 +4,6 @@
 *.pdf
 *.png
 *.img.xz
-qemu/*
+*.img
+*.bkp
+*.list
