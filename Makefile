@@ -79,9 +79,21 @@ xcc32 = $(xcc32_env)/bin/arm-linux-gnueabihf-
 uboot_dir	= u-boot
 uboot_bin	= $(uboot_dir)/u-boot-sun50iw1p1.bin
 
+
+define UBOOTENV
+\t\t"if load mmc 0:1 $${load_addr} uEnv.txt; then " \
+\\\n\t\t\t"run import_bootenv; " \
+\\\n\t\t"fi" \
+\\
+endef
+export UBOOTENV
+
+
 uboot_dld:
 	git clone --depth 1 --branch pine64-hacks --single-branch \
-	https://github.com/longsleep/u-boot-pine64.git $(uboot_dir)
+	https://github.com/longsleep/u-boot-pine64.git $(uboot_dir) && \
+	sed -i.bkp '/\"mmcbootcmd=\" /a\'"$$UBOOTENV" $(uboot_dir)/include/configs/sun50iw1p1.h
+
 
 uboot_build:
 	$(MAKE) ARCH=arm CROSS_COMPILE=$(xcc32) -C $(uboot_dir) sun50iw1p1_config && \
