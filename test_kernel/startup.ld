@@ -15,4 +15,7 @@ SECTIONS
     } > ram
     .data : { *(.data) } > ram
     .bss : { *(.bss COMMON) } > ram
+    . = ALIGN(8);
+    . = . +0x1000;
+    stack_top = .;
 }

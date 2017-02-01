@@ -12,8 +12,8 @@ _Reset:
     B . /* IRQ */
     B . /* FIQ */
 
+/* CPU starts in 32bit mode */
 ResetHandler:
-	mov sp,#0x42000000
-	add sp,sp,#0x1000
+	ldr sp, =stack_top
 	bl kentry
 	b .
