@@ -214,9 +214,9 @@ im_out		=	szyszka.img
 im_part		=	szyszka.disk
 im_part		=	szyszka.disk
 u_env		=	uEnv.txt
-boot0_pos	=	8		#KB  = 
+boot0_pos	=	8		#KB  =
 # this hole seems to be fixed by boot0
-uboot_pos	=	19096	#KB  = 
+uboot_pos	=	19096	#KB  =
 part_pos	=	20		#MB  = [0x1400000
 part_pos_kb	=	20480	# same in KB
 boot_sz		=	10		#MB, I assume not more will be needed
@@ -278,7 +278,7 @@ image_kernel:
 #
 
 image_flash:
-	sudo dd if=$(im_out) bs=1M oflag=sync of=$(sd_path)
+	sudo dd if=$(im_out) bs=1M oflag=sync of=$(sd_path) && sync
 
 # xcc64
 image_test:
@@ -291,5 +291,5 @@ image_test:
 #	sunxi#
 #	sunxi#set mmcboot 'run load_kernel go ${load_addr}'
 #	s
-	
+
 
