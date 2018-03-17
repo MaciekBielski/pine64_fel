@@ -1,9 +1,10 @@
-ENTRY(_Reset)
+ENTRY(_reset)
 
 MEMORY
 {
     /* this is load_addr from u-boot */
-	ram : ORIGIN = 0x41000000, LENGTH = 0x1000
+    /* lets use 256MB for now */
+	ram : ORIGIN = 0x41000000, LENGTH = 0x10000000
 }
 
 SECTIONS

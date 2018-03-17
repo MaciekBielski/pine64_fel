@@ -1,6 +1,6 @@
 
-volatile unsigned int * const UART0_DR = (unsigned int *)0x01C28000;
-volatile unsigned int * const UART_LSR = (unsigned int *)0x01C28014;
+static volatile unsigned int * const UART0_DR = (unsigned int *)0x01C28000;
+static volatile unsigned int * const UART_LSR = (unsigned int *)0x01C28014;
 
 static void print_uart0(const char c)
 {

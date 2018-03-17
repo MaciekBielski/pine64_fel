@@ -211,8 +211,8 @@ pack_clean:
 #######################################################################
 
 im_out		=	szyszka.img
-im_part		=	szyszka.disk
-im_part		=	szyszka.disk
+im_part		=	szyszka.part
+im_part		=	szyszka.part
 u_env		=	uEnv.txt
 boot0_pos	=	8		#KB  =
 # this hole seems to be fixed by boot0
@@ -247,7 +247,7 @@ image_kernel:
 	sudo mkfs.vfat -n BOOT $(im_part) && \
 	mcopy -smnv -i $(im_part)  $(kern_im) :: && \
 	mcopy -smnv -i $(im_part) $(u_env) ::
-	dd if=$(im_part) conv=notrunc oflag=append bs=1M seek=$(part_pos) of=$(im_out) && \
+	dd if=$(im_part) conv=notrunc bs=1M seek=$(part_pos) of=$(im_out) && \
 	rm -f $(im_part)
 	sh -c "$$PARTTAB"
 
