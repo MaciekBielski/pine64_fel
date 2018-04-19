@@ -280,9 +280,15 @@ image_kernel:
 image_flash:
 	sudo dd if=$(im_out) bs=1M oflag=sync of=$(sd_path) && sync
 
+flash_kernel:
+	rm $(im_out)
+	$(MAKE) image_boot
+	$(MAKE) image_kernel
+	$(MAKE) image_flash
+
 # xcc64
 image_test:
-	$(xcc64)objdump -fF $(im_out)
+	$(xcc32)objdump -fF $(im_out)
 
 #Environment size: 1619/131067 bytes
 #	sunxi#set load_kernel 'fatload mmc ${boot_part} ${load_addr} ${kernel_filename}'
