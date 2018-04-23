@@ -212,17 +212,17 @@ pack_clean:
 
 im_out		=	szyszka.img
 im_part		=	szyszka.part
-im_part		=	szyszka.part
 u_env		=	uEnv.txt
+im_sz		=	20		#MB
 boot0_pos	=	8		#KB  =
 # this hole seems to be fixed by boot0
 uboot_pos	=	19096	#KB  =
 part_pos	=	20		#MB  = [0x1400000
-part_pos_kb	=	20480	# same in KB
-boot_sz		=	10		#MB, I assume not more will be needed
+part_pos_kb	=	2048	# same in KB
+boot_sz		=	10 		#MB, I assume not more will be needed
 
 image_boot:
-	dd if=/dev/zero bs=1M count=$(part_pos) of=$(im_out)
+	dd if=/dev/zero bs=1M count=$(im_sz) of=$(im_out)
 	dd if=$(boot0_img) conv=notrunc bs=1K seek=$(boot0_pos) of=$(im_out)
 	dd if=$(uboot_dtb) conv=notrunc bs=1K seek=$(uboot_pos) of=$(im_out)
 
@@ -244,12 +244,12 @@ export PARTTAB
 
 image_kernel:
 	dd if=/dev/zero bs=1M count=$(boot_sz) of=$(im_part)
-	sudo mkfs.vfat -n BOOT $(im_part) && \
-	mcopy -smnv -i $(im_part)  $(kern_im) :: && \
+	sudo mkfs.vfat -n BOOT $(im_part)
+	mcopy -smnv -i $(im_part) $(kern_im) :: && \
 	mcopy -smnv -i $(im_part) $(u_env) ::
+	sh -c "$$PARTTAB"
 	dd if=$(im_part) conv=notrunc bs=1M seek=$(part_pos) of=$(im_out) && \
 	rm -f $(im_part)
-	sh -c "$$PARTTAB"
 
 # HOW To run my binary form uboot??
 #
@@ -281,7 +281,7 @@ image_flash:
 	sudo dd if=$(im_out) bs=1M oflag=sync of=$(sd_path) && sync
 
 flash_kernel:
-	rm $(im_out)
+	rm -f $(im_out)
 	$(MAKE) image_boot
 	$(MAKE) image_kernel
 	$(MAKE) image_flash

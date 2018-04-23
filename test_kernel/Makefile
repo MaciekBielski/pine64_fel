@@ -10,7 +10,7 @@ bin_elf		=	hello.elf
 bin_img		=	hello.bin
 
 # cflags = -Wall -march=armv8-a -mcpu=cortex-a53 -nostdlib -nostartfiles -ffreestanding -g
-cflags = -Wall -march=armv8-a -mcpu=cortex-a53
+cflags = -march=armv8-a -mcpu=cortex-a53
 
 
 #######################################################################
