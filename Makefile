@@ -213,12 +213,12 @@ pack_clean:
 im_out		=	szyszka.img
 im_part		=	szyszka.part
 u_env		=	uEnv.txt
-im_sz		=	20		#MB
+im_sz		=	30		#MB
 boot0_pos	=	8		#KB  =
 # this hole seems to be fixed by boot0
 uboot_pos	=	19096	#KB  =
 part_pos	=	20		#MB  = [0x1400000
-part_pos_kb	=	2048	# same in KB
+part_pos_kb	=	20480	# same in KB
 boot_sz		=	10 		#MB, I assume not more will be needed
 
 image_boot:
