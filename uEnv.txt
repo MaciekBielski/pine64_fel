@@ -1,6 +1,6 @@
 console=tty0 console=ttyS0,115200n8 no_console_suspend
-kernel_filename=hello.bin
-load_addr=41000000
+kernel_filename=startup.bin
+load_addr=40000000
 load_kernel=fatload mmc ${boot_part} ${load_addr} ${kernel_filename}
 mmcboot=run load_kernel; go ${load_addr}
 

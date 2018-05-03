@@ -3,7 +3,7 @@ ENTRY(_reset)
 MEMORY
 {
     /* this is load_addr from u-boot */
-	ram (!rx) : ORIGIN = 0x41000000, LENGTH = 0x10000000
+	ram (!rx) : ORIGIN = 0x40000000, LENGTH = 0x10000000
 }
 
 SECTIONS

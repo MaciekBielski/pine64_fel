@@ -22,16 +22,17 @@ im_flash:
 #######################################################################
 
 test_dir	=	test_kernel
+startup_im	=	$(test_dir)/startup.bin
 kern_im		=	$(test_dir)/hello.bin
 
-build_objects:
-	$(MAKE) -C $(test_dir) build_test
+build_startup:
+	$(MAKE) -C $(test_dir) startup
 
-link_objects:
-	$(MAKE) -C $(test_dir) link_test
+# link_objects:
+# 	$(MAKE) -C $(test_dir) link_test
 
-clean_objects:
-	$(MAKE) -C $(test_dir) clean
+clean_startup:
+	$(MAKE) -C $(test_dir) clean_startup
 
 
 #######################################################################
@@ -245,7 +246,7 @@ export PARTTAB
 image_kernel:
 	dd if=/dev/zero bs=1M count=$(boot_sz) of=$(im_part)
 	sudo mkfs.vfat -n BOOT $(im_part)
-	mcopy -smnv -i $(im_part) $(kern_im) :: && \
+	mcopy -smnv -i $(im_part) $(startup_im) :: && \
 	mcopy -smnv -i $(im_part) $(u_env) ::
 	sh -c "$$PARTTAB"
 	dd if=$(im_part) conv=notrunc bs=1M seek=$(part_pos) of=$(im_out) && \
