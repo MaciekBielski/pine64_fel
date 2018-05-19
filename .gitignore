@@ -8,3 +8,5 @@
 *.bkp
 *.list
 u-boot
+*.lst
+*.srec

@@ -70,7 +70,7 @@ run64_auto:
 	./$(sunxid)/sunxi-fel reset64 $(start64)
 
 # the same as above but with custom restarting binary
-run64_manual:
+run64:
 	./$(sunxid)/sunxi-fel spl $(blobsd)/$(spl)
 	./$(sunxid)/sunxi-fel write $(start32) $(target32).bin
 	./$(sunxid)/sunxi-fel write $(start64) $(target64).bin
