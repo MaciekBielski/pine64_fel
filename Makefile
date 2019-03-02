@@ -55,23 +55,20 @@ run32:
 	./$(sunxid)/sunxi-fel exe $(start32)
 
 ###############################################################################
-target64	=	hello64
-_cflags=-nostdlib -nodefaultlibs
-_ldflags =-Wl,-e$(start64) -Wl,-Ttext=$(start64) -Wl,--build-id=none
+target64 = hbl
+hbl_dir	= hbl
 
-$(target64): $(target64).S
-	$(xcc64)gcc $(_cflags) -o $@.elf $^ $(_ldflags)
-	$(xcc64)objcopy --remove-section .ARM.attributes $@.elf
-	$(xcc64)objdump -D $@.elf > $@.lst
-	$(xcc64)objcopy -O binary	$@.elf $@.bin
-	$(xcc64)objcopy -O srec		$@.elf $@.srec
+.PHONY: hbl clean run
 
-clean64:
-	rm -f $(target64).o $(target64).elf $(target64).bin $(target64).lst $(target64).srec
+$(target64):
+	make -C $(hbl_dir) $@
 
-run64:
+clean:
+	make -C $(hbl_dir) clean
+
+run:
 	./$(sunxid)/sunxi-fel spl $(blobsd)/$(spl)
-	./$(sunxid)/sunxi-fel write $(start64) $(target64).bin
+	./$(sunxid)/sunxi-fel write $(start64) $(hbl_dir)/$(target64).bin
 	./$(sunxid)/sunxi-fel reset64 $(start64)
 
 # the same as above but with custom restarting binary
@@ -113,7 +110,7 @@ ubclean:
 	$(MAKE) -C $(ub_dir) mrproper
 
 
-boot:
+uboot:
 	./$(sunxid)/sunxi-fel spl $(blobsd)/$(spl)
 	./$(sunxid)/sunxi-fel write $(start64) $(ub_bin)
 	./$(sunxid)/sunxi-fel reset64 $(start64)
