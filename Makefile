@@ -61,10 +61,10 @@ hbl_dir	= hbl
 .PHONY: hbl clean run
 
 $(target64):
-	make -C $(hbl_dir) $@
+	$(MAKE) -C $(hbl_dir) $@
 
 clean:
-	make -C $(hbl_dir) clean
+	$(MAKE) -C $(hbl_dir) clean
 
 run:
 	./$(sunxid)/sunxi-fel spl $(blobsd)/$(spl)
