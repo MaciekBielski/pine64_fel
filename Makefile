@@ -68,17 +68,17 @@ $(target64): $(target64).s
 clean64:
 	rm -f $(target64).o $(target64).elf $(target64).bin $(target64).lst $(target64).srec
 
-run64_auto:
+run64:
 	./$(sunxid)/sunxi-fel spl $(blobsd)/$(spl)
 	./$(sunxid)/sunxi-fel write $(start64) $(target64).bin
 	./$(sunxid)/sunxi-fel reset64 $(start64)
 
 # the same as above but with custom restarting binary
-run64:
-	./$(sunxid)/sunxi-fel spl $(blobsd)/$(spl)
-	./$(sunxid)/sunxi-fel write $(start32) $(target32).bin
-	./$(sunxid)/sunxi-fel write $(start64) $(target64).bin
-	./$(sunxid)/sunxi-fel exe $(start32)
+# run64:
+# 	./$(sunxid)/sunxi-fel spl $(blobsd)/$(spl)
+# 	./$(sunxid)/sunxi-fel write $(start32) $(target32).bin
+# 	./$(sunxid)/sunxi-fel write $(start64) $(target64).bin
+# 	./$(sunxid)/sunxi-fel exe $(start32)
 
 
 ###############################################################################
