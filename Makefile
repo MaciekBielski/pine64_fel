@@ -56,10 +56,11 @@ run32:
 
 ###############################################################################
 target64	=	hello64
+_cflags=-nostdlib -nodefaultlibs
+_ldflags =-Wl,-e$(start64) -Wl,-Ttext=$(start64) -Wl,--build-id=none
 
-$(target64): $(target64).s
-	$(xcc64)as -o $@.o $^
-	$(xcc64)ld -e $(start64) -Ttext=$(start64) -o $@.elf $@.o
+$(target64): $(target64).S
+	$(xcc64)gcc $(_cflags) -o $@.elf $^ $(_ldflags)
 	$(xcc64)objcopy --remove-section .ARM.attributes $@.elf
 	$(xcc64)objdump -D $@.elf > $@.lst
 	$(xcc64)objcopy -O binary	$@.elf $@.bin
